@@ -1,0 +1,40 @@
+{
+  "name": "grao-de-milho-front",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
+    "cpy-cli": "^1.0.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "html-minifier-cli": "^0.1.0",
+    "imagemin-cli": "^3.0.0",
+    "lite-server": "^2.3.0",
+    "mkdirp": "^0.5.1",
+    "node-sass": "^4.5.3",
+    "onchange": "^3.2.1",
+    "parallelshell": "^3.0.1",
+    "uglify-js": "^3.1.1"
+  },
+  "scripts": {
+    "dev": "npm run build && parallelshell 'npm run serve' 'npm run watch'",
+    "start": "npm run build",
+    "build": "npm run build:js && npm run build:css && npm run build:html && npm run build:img",
+    "build:js": "npm run lint && mkdirp dist/js && browserify src/js/index.js -t [ babelify --presets es2015 ] | uglifyjs > dist/js/app.js",
+    "build:css": "node-sass src/css/app.sass dist/css/app.css -q --include-path node_modules",
+    "build:html": "htmlmin -o dist/index.html src/index.html",
+    "build:img": "imagemin 'src/img/**/*' -o 'dist/img'",
+    "lint": "eslint src/js/",
+    "serve": "lite-server",
+    "watch": "parallelshell 'npm run watch:js' 'npm run watch:css' 'npm run watch:html' 'npm run watch:img'",
+    "watch:js": "onchange 'src/js/**/*.js' -- npm run build:js",
+    "watch:css": "onchange 'src/css/**/*.sass' -- npm run build:css",
+    "watch:html": "onchange 'src/*.html' -- npm run build:html",
+    "watch:img": "onchange 'src/img/*' -- npm run build:img"
+  }
+}
